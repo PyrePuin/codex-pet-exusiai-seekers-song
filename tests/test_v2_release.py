@@ -3,7 +3,7 @@ import json
 import unittest
 from pathlib import Path
 
-from PIL import Image
+from PIL import Image, ImageChops
 
 
 RELEASE = Path(__file__).resolve().parents[1]
@@ -27,7 +27,20 @@ class ExusiaiV2ReleaseTests(unittest.TestCase):
     def test_first_nine_rows_are_preserved(self):
         with Image.open(RELEASE / "spritesheet.webp") as atlas:
             rgba = atlas.convert("RGBA")
-            for row in range(9):
+            row0_active = rgba.crop((0, 0, 6 * 192, 208)).getchannel("A")
+            self.assertEqual(
+                hashlib.sha256(row0_active.tobytes()).hexdigest(),
+                BASELINE["row0_active"],
+            )
+
+            neutral = rgba.crop((6 * 192, 0, 7 * 192, 208)).getchannel("A")
+            idle_zero = rgba.crop((0, 0, 192, 208)).getchannel("A")
+            self.assertEqual(neutral.getbbox(), idle_zero.getbbox())
+            neutral_delta = ImageChops.difference(neutral, idle_zero)
+            self.assertLessEqual(sum(neutral_delta.histogram()[1:]), 1)
+            self.assertIsNone(rgba.crop((7 * 192, 0, 8 * 192, 208)).getchannel("A").getbbox())
+
+            for row in range(1, 9):
                 alpha = rgba.crop(
                     (0, row * 208, 1536, (row + 1) * 208)
                 ).getchannel("A")
