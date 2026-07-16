@@ -1,0 +1,16 @@
+{
+  "pass": true,
+  "standard_rows": {
+    "pass": true,
+    "basis": "existing approved v1 rows preserved by alpha fingerprint",
+    "user_constraints": "tree scenery and expressive stars, notes, question marks, magnifier and failure symbols are intentional and explicitly requested"
+  },
+  "look_rows": {
+    "pass": true,
+    "proportion_pass": true,
+    "direction_pass": true,
+    "continuity_pass": true,
+    "summary": "normal head-to-body ratio, mature slender silhouette, full legs, complete connected wings/halo/lute, correct cardinal directions and coherent clockwise loop"
+  },
+  "blocking_issues": []
+}
